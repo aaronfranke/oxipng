@@ -343,6 +343,13 @@ be processed successfully. The output will always have correct checksums.")
                 .action(ArgAction::SetTrue),
         )
         .arg(
+            Arg::new("cache")
+                .help("Cache the history of optimized files and avoid reoptimizing optimal files")
+                .short('c')
+                .long("cache")
+                .action(ArgAction::SetTrue),
+        )
+        .arg(
             Arg::new("zopfli")
                 .help("Use the much slower but stronger Zopfli compressor")
                 .long_help("\

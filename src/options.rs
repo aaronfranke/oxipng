@@ -94,6 +94,10 @@ pub struct Options {
     ///
     /// Default: `false`
     pub force: bool,
+    /// Cache the history of optimized files and avoid reoptimizing optimal files.
+    ///
+    /// Default: `false`
+    pub cache: bool,
     /// Which `FilterStrategy` to try on the file
     ///
     /// Default: `None,Sub,Entropy,Bigrams`
@@ -285,6 +289,7 @@ impl Default for Options {
         Self {
             fix_errors: false,
             force: false,
+            cache: false,
             filters: indexset! {
                 FilterStrategy::NONE,
                 FilterStrategy::SUB,

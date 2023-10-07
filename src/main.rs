@@ -349,6 +349,8 @@ fn parse_opts_into_struct(
 
     opts.force = matches.get_flag("force");
 
+    opts.cache = matches.get_flag("cache");
+
     opts.fix_errors = matches.get_flag("fix");
 
     opts.max_decompressed_size = matches.get_one::<u64>("max-size").map(|&x| x as usize);

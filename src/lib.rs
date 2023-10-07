@@ -41,6 +41,7 @@ use crate::{
 
 mod apng;
 mod atomicmin;
+mod cache;
 mod colors;
 mod deflate;
 mod display_chunks;
@@ -181,13 +182,25 @@ pub fn optimize(input: &InFile, output: &OutFile, opts: &Options) -> Optimizatio
             data
         }
     };
+    let in_length: usize = in_data.len();
+    // When cache is enabled, check if the file has already been optimized.
+    if opts.cache {
+        let is_data_in_cache: bool = crate::cache::check_cache_for_data_hash(&in_data);
+        if is_data_in_cache {
+            info!("{}: File was previously optimized, skipping.", input);
+            return Ok((in_length, in_length));
+        }
+    }
 
     let mut png = PngData::from_slice(&in_data, opts)?;
 
     // Run the optimizer on the decoded PNG.
     let mut optimized_output = optimize_png(&mut png, &in_data, opts, deadline)?;
 
-    let in_length = in_data.len();
+    // When cache is enabled, write the hash of the optimized file to the cache.
+    if opts.cache {
+        crate::cache::write_data_hash_to_cache(&optimized_output);
+    }
 
     if is_fully_optimized(in_length, optimized_output.len(), opts) {
         match (output, input) {
